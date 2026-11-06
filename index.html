@@ -364,6 +364,7 @@ footer .by{width:100%;text-align:center;color:var(--muted);font-size:13px}
 .cin{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#fff}
 .cin textarea{flex:1;resize:none;font:inherit;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--bg);max-height:110px}
 .cin button{width:46px;border-radius:14px;background:var(--sage);color:#fff;font-size:18px;transform:scaleX(-1)}
+#bootld{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#F4F8F5,#EFEDF7);display:grid;place-items:center;transition:opacity .35s}#bootld .bl{display:flex;flex-direction:column;align-items:center;gap:14px}#bootld img{width:170px;max-width:60vw}#bootld i{width:34px;height:34px;border-radius:50%;border:3px solid #cfe0d6;border-top-color:#4f8a6c;animation:bspin .8s linear infinite}#bootld p{margin:0;color:#6b7d73;font-size:14px}@keyframes bspin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.view{animation:none}*{transition:none!important}}
 </style>
 </head>
@@ -759,7 +760,8 @@ function applyGoogle(g){
   ST.forEach((s,i)=>s.w=W.filter(w=>w.o!=='__hidden'&&(w.s===i||w.s2===i)).map(w=>w.id));
 }
 function busyTyping(){const a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return true;return [...document.querySelectorAll('input[type=file]')].some(f=>f.files&&f.files.length)||[...document.querySelectorAll('#v-admin input:not([type=file]),#v-admin textarea')].some(i=>i.value!==i.defaultValue)}
-function loadPublic(tries){fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(g=>{applyGoogle(g);if(!busyTyping())route();userBar()}).catch(()=>{if(tries>0)setTimeout(()=>loadPublic(tries-1),2500)})}
+function loadPublic(tries){fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(g=>{applyGoogle(g);if(!window.__booted)boot();else if(!busyTyping())route();userBar()}).catch(()=>{if(tries>0)setTimeout(()=>loadPublic(tries-1),2500);else boot()})}
+function boot(){if(window.__booted)return;window.__booted=true;const l=document.getElementById('bootld');if(l){l.style.opacity='0';setTimeout(()=>l.remove(),350)}route();userBar()}
 if(HAS_API)loadPublic(3);
 
 /* ---------- login ---------- */
@@ -982,7 +984,7 @@ function route(){
   const act=$('#nav a.on');if(act)act.scrollIntoView({inline:'center',block:'nearest'});
   window.scrollTo(0,0);
 }
-addEventListener('hashchange',route);route();userBar();startMsgPoll();
+addEventListener('hashchange',()=>{if(window.__booted||!HAS_API)route()});if(!HAS_API){window.__booted=true;route()}else{const lg=document.querySelector('header img, .logo img, img');document.body.insertAdjacentHTML('beforeend',`<div id="bootld"><div class="bl">${lg?`<img src="${lg.src}" alt="">`:''}<i></i><p>جاري التحميل...</p></div></div>`);setTimeout(boot,7000)}userBar();startMsgPoll();
 
 /* ---------- lightbox ---------- */
 let L=[],k=0;const lb=$('#lb');
