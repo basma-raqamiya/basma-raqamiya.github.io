@@ -693,7 +693,7 @@ sres.onclick=e=>{if(e.target.closest('a')){sres.classList.remove('on');$('#q').v
 document.addEventListener('click',e=>{if(!e.target.closest('.sres,.search,#sBtn'))sres.classList.remove('on')});
 
 /* ================= student uploads & teacher panel (Google) ================= */
-const API='https://script.google.com/macros/s/AKfycbzTAVR2ypuuMkZ1lvYEfezNS_usdAKsAZ2E6TAOnDm1vOUSVUCry3tjdTv2TGQveeYi/exec';
+const API='https://script.google.com/macros/s/AKfycbz94fac2nMtbe5cFKTvqvCfrEN0ekp8DQ5b4RZHuZL8Hf0sCqI4ioWoFRZzEs3qOIad/exec';
 const HAS_API=API.startsWith('https://');
 const gImg=(f,w=1000)=>`https://drive.google.com/thumbnail?id=${f}&sz=w${w}`;
 const gPrev=f=>`https://drive.google.com/file/d/${f}/preview`;
