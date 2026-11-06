@@ -745,7 +745,7 @@ function applyGoogle(g){
     let s=ST.findIndex(t=>t.gid===x.sid); if(s<0&&x.sn){const nm=String(x.sn).trim();s=ST.findIndex(t=>String(t.n).trim()===nm)}
     const isVid=x.k==='v'||String(x.m).startsWith('video'); const isDoc=!String(x.m).startsWith('image')&&!isVid;
     const w={id:W.length,key:'g_'+x.id,o:x.o,k:isVid?'v':x.k,s:s<0?null:s,cr:s<0?x.sn:null,src:gImg(x.f),title:x.t||(isVid?('فيديو '+((occBy(x.o)||{}).t||'الفعالية')):''),gid:x.id};
-    if(isVid||isDoc){w.ifr=gPrev(x.f)} if(isVid){w.vk='g_'+x.id;D.vp[w.vk]=gImg(x.f,600);w.gv='https://drive.google.com/uc?export=download&id='+x.f}
+    if(isVid||isDoc){w.ifr=gPrev(x.f)} if(isVid){w.vk='g_'+x.id;D.vp[w.vk]=gImg(x.f,600);w.gv=x.gh?x.gh:('https://drive.google.com/uc?export=download&id='+x.f)}
     W.push(w);
   });
   // approved uploads also appear in the news
