@@ -987,7 +987,7 @@ function route(){
   const act=$('#nav a.on');if(act)act.scrollIntoView({inline:'center',block:'nearest'});
   window.scrollTo(0,0);
 }
-addEventListener('hashchange',()=>{if(window.__booted||!HAS_API)route()});if(!HAS_API){window.__booted=true;route()}else{let cc=null;try{cc=localStorage.getItem('bs_pub')}catch(e){}if(cc){try{applyGoogle(JSON.parse(cc));window.__fromCache=true}catch(e){}boot()}else{const lg=document.querySelector('header img, .logo img, img');document.body.insertAdjacentHTML('beforeend',`<div id="bootld"><div class="bl">${lg?`<img src="${lg.src}" alt="">`:''}<i></i><p>جاري التحميل...</p></div></div>`);setTimeout(boot,7000)}}userBar();startMsgPoll();
+addEventListener('hashchange',()=>{if(window.__booted||!HAS_API)route()});if(!HAS_API){window.__booted=true;route()}else{try{localStorage.removeItem('bs_pub')}catch(e){}{const lg=document.querySelector('header img, .logo img, img');document.body.insertAdjacentHTML('beforeend',`<div id="bootld"><div class="bl">${lg?`<img src="${lg.src}" alt="">`:''}<i></i><p>جاري التحميل...</p></div></div>`);setTimeout(boot,7000)}}userBar();startMsgPoll();
 
 /* ---------- lightbox ---------- */
 let L=[],k=0;const lb=$('#lb');
