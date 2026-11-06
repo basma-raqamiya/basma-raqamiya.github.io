@@ -760,7 +760,10 @@ function applyGoogle(g){
   ST.forEach((s,i)=>s.w=W.filter(w=>w.o!=='__hidden'&&(w.s===i||w.s2===i)).map(w=>w.id));
 }
 function busyTyping(){const a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return true;return [...document.querySelectorAll('input[type=file]')].some(f=>f.files&&f.files.length)||[...document.querySelectorAll('#v-admin input:not([type=file]),#v-admin textarea')].some(i=>i.value!==i.defaultValue)}
-function loadPublic(tries){fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(g=>{applyGoogle(g);if(!window.__booted)boot();else if(!busyTyping())route();userBar()}).catch(()=>{if(tries>0)setTimeout(()=>loadPublic(tries-1),2500);else boot()})}
+function loadPublic(tries){fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(txt=>{const g=JSON.parse(txt);let old=null;try{old=localStorage.getItem('bs_pub')}catch(e){}
+  if(window.__fromCache){if(old!==txt){try{localStorage.setItem('bs_pub',txt)}catch(e){}if(!busyTyping()&&!/^#(admin|msgs)/.test(location.hash))location.reload()}return}
+  try{localStorage.setItem('bs_pub',txt)}catch(e){}
+  applyGoogle(g);if(!window.__booted)boot();else if(!busyTyping())route();userBar()}).catch(()=>{if(tries>0)setTimeout(()=>loadPublic(tries-1),2500);else boot()})}
 function boot(){if(window.__booted)return;window.__booted=true;const l=document.getElementById('bootld');if(l){l.style.opacity='0';setTimeout(()=>l.remove(),350)}route();userBar()}
 if(HAS_API)loadPublic(3);
 
@@ -973,7 +976,7 @@ function msgs_view(){renderChat()}
 /* ---------- router ---------- */
 const V=['home','students','student','occasions','occ','works','news','about','login','me','admin','msgs'];
 function route(){
-  if(typeof CHANGED!=='undefined'&&CHANGED&&!/^#?(admin|msgs)/.test(location.hash)){CHANGED=false;location.reload();return}
+  if(typeof CHANGED!=='undefined'&&CHANGED&&!/^#?(admin|msgs)/.test(location.hash)){CHANGED=false;try{localStorage.removeItem('bs_pub')}catch(e){}location.reload();return}
   const h=(location.hash||'#home').slice(1);let v=h,a=null;
   if(h.startsWith('st-')){v='student';a=+h.slice(3)}else if(h.startsWith('occ-')){v='occ';a=h.slice(4)}
   if(!V.includes(v))v='home';
@@ -984,7 +987,7 @@ function route(){
   const act=$('#nav a.on');if(act)act.scrollIntoView({inline:'center',block:'nearest'});
   window.scrollTo(0,0);
 }
-addEventListener('hashchange',()=>{if(window.__booted||!HAS_API)route()});if(!HAS_API){window.__booted=true;route()}else{const lg=document.querySelector('header img, .logo img, img');document.body.insertAdjacentHTML('beforeend',`<div id="bootld"><div class="bl">${lg?`<img src="${lg.src}" alt="">`:''}<i></i><p>جاري التحميل...</p></div></div>`);setTimeout(boot,7000)}userBar();startMsgPoll();
+addEventListener('hashchange',()=>{if(window.__booted||!HAS_API)route()});if(!HAS_API){window.__booted=true;route()}else{let cc=null;try{cc=localStorage.getItem('bs_pub')}catch(e){}if(cc){try{applyGoogle(JSON.parse(cc));window.__fromCache=true}catch(e){}boot()}else{const lg=document.querySelector('header img, .logo img, img');document.body.insertAdjacentHTML('beforeend',`<div id="bootld"><div class="bl">${lg?`<img src="${lg.src}" alt="">`:''}<i></i><p>جاري التحميل...</p></div></div>`);setTimeout(boot,7000)}}userBar();startMsgPoll();
 
 /* ---------- lightbox ---------- */
 let L=[],k=0;const lb=$('#lb');
